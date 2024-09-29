@@ -11,20 +11,28 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 import os
 from pathlib import Path
+from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-BASE_API_URL= "https://152.70.117.82:8443"
+# BASE_API_URL= "https://152.70.117.82:8443"
 
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
+# Load the .env file
+load_dotenv(os.path.join(BASE_DIR, '.env'))
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-lrc(&n)^1my)n*g4sf!cy8a_v6$=0ao0z9_8skseppt0s!=v4%'
+# Now access the environment variables
+SECRET_KEY = os.getenv('SECRET_KEY')
+BASE_API_URL = os.getenv('BASE_API_URL')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv('DEBUG', 'False')
+
+# # Set ALLOWED_HOSTS for production
+# if DEBUG:
+#     ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+# else:
+#     ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '').split(',')
 
 ALLOWED_HOSTS = []
 

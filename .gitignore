@@ -1,6 +1,7 @@
 .venv/
 media/
 db.sqilite3
+.env
 racing_silks_20240918_1.json
 all_time_data.json
 more_than1_same_data.json
