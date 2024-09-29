@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% load static%}
+    <link rel="stylesheet" href="/static/racingapp/style.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 16 16%22><text y=%2214%22 font-size=%2214%22>🐎</text></svg>">
+    <title>Racing Silks</title>
+</head>
+<body>
+    <div class="sidebar">
+        <div>
+            <h2 class="welcome-heading">Welcome </h2>
+            <h5 class="name-heading">{{ first_name }} {{last_name}}</h5>
+        </div>
+        <form method="get" id="filterForm">
+
+            <label for="center_course_cd">Center Course Code</label>
+            <select name="center_course_cd" id="center_course_cd" onchange="this.form.submit()">
+                {% for option in center_course_cd_list %}
+                    <option value="{{ option }}" {% if option == selected_center_course_cd %}selected{% endif %}>{{ option }}</option>
+                {% endfor %}
+            </select>
+
+            <label for="distance_cd">Distance</label>
+            <select name="distance_cd" id="distance_cd" onchange="this.form.submit()">
+                {% for option in distance_list %}
+                    <option value="{{ option }}" {% if option == selected_distance_cd %}selected{% endif %}>{{ option }}</option>
+                {% endfor %}
+            </select>
+
+            <label for="work_completed_flag">Work Completed Flag</label>
+            <select name="work_completed_flag" id="work_completed_flag" onchange="this.form.submit()">
+                {% for option in work_completed_flag_list %}
+                    <option value="{{ option }}" {% if option == selected_work_completed_flag %}selected{% endif %}>{{ option }}</option>
+                {% endfor %}
+            </select>
+
+            <label for="race_date">Race Date</label>
+            <select name="race_date" id="race_date" onchange="this.form.submit()">
+                {% for option in race_date_list %}
+                    <option value="{{ option }}" {% if option == selected_race_date %}selected{% endif %}>{{ option }}</option>
+                {% endfor %}
+            </select>
+
+            <label for="race_no">Race Number</label>
+            <select name="race_no" id="race_no" onchange="this.form.submit()">
+                {% for option in race_no_list %}
+                    <option value="{{ option }}" {% if option == selected_race_no %}selected{% endif %}>{{ option }}</option>
+                {% endfor %}
+            </select>
+        </form>
+        <form class="logout-form" action="{% url 'logout' %}" method="POST">
+            {% csrf_token %}
+            <button type="submit">Logout</button>
+        </form>
+
+    </div>
+
+    <div class="main-content">
+        <div class="upper-container">
+            <div class="main-table-container">
+                <table  class="main-table">
+                    <thead>
+                        <tr>
+                            <th>Back</th>
+                            <th>Silk</th>
+                            <th>H#</th>
+                            <th>Horse</th>
+                            <th>Rank</th>
+                            <th>Draw</th>
+                            <th>Outs</th>
+                            <th>Snag</th>
+                            <th></th>
+                            <th>Back</th>
+                            <th>Silk</th>
+                            <th>H#</th>
+                            <th>Horse</th>
+                            <th>Rank</th>
+                            <th>Draw</th>
+                            <th>Outs</th>
+                            <th>Snag</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for row in table_data %}
+                        <tr>
+                            <td  {% if row.Back_color_first %}style="{{ row.Back_color_first }}"{% endif %}>{{ row.Back_first }}</td>
+                            <td><img src="{{row.Silk_first}}"></td>
+                            <td>{{ row.Hno_first }}</td>
+                            <td>{{ row.Horse_first }}</td>
+                            <td {% if row.Back_first == 0 %}style="font-weight: bold;"{% endif %}>
+                                {{ row.Rank_first }}
+                            </td>
+                            <td>{{ row.Draw_first }}</td>
+                            <td>{{ row.Outs_first }}</td>
+                            <td>{{ row.Snag_first }}</td>
+                            <td></td>
+                            <td {% if row.Back_color_second %}style="{{ row.Back_color_second }}"{% endif %}>{{ row.Back_second }}</td>
+                            <td><img src="{{row.Silk_second}}"></td>
+                            <td>{{ row.Hno_second }}</td>
+                            <td>{{ row.Horse_second }}</td>
+                            <td>{{ row.Rank_second }}</td>
+                            <td>{{ row.Draw_second }}</td>
+                            <td>{{ row.Outs_second }}</td>
+                            <td>{{ row.Snag_second }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% block content %}{% endblock %}   
+        </div>
+    </div>
+</body>
+</html>
+
+

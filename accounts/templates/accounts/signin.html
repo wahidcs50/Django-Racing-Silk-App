@@ -1,0 +1,40 @@
+{% load static %}
+
+<link rel="stylesheet" href="/static/accounts/accounts.css">
+
+<div class="auth-container">
+    <h2>Login</h2>
+    <form method="post">
+        {% csrf_token %}
+        <div>
+            {{ form.username.label_tag }}
+            {{ form.username }}
+        </div>
+        <div class="password-field">
+            {{ form.password.label_tag }}
+            <div class="password-input">
+                {{ form.password }}
+                <span toggle="#id_password" class="eye-icon toggle-password"></span>
+            </div>
+            <small>{{ form.password.help_text }}</small>
+        </div>
+        
+        <button type="submit">Login</button>
+    </form>
+    <a href="{% url 'signup' %}">Don't have an account? Sign up here.</a>
+</div>
+
+<script>
+    document.querySelectorAll('.toggle-password').forEach(icon => {
+        icon.addEventListener('click', function() {
+            const passwordField = document.querySelector(this.getAttribute('toggle'));
+            if (passwordField.type === 'password') {
+                passwordField.type = 'text';
+                this.classList.add('visible');
+            } else {
+                passwordField.type = 'password';
+                this.classList.remove('visible');
+            }
+        });
+    });
+</script>

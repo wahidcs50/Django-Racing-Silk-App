@@ -1,0 +1,82 @@
+{% extends 'racingapp/horse_selection.html' %}
+{% load static %}
+<link rel="stylesheet" href="/static/racingapp/style.css">
+
+{% block pivot_content %}
+
+<div class="form-container-centered">
+     <h1 class="oval"> Choose View</h1>
+    <form method="get" action="">
+        <input type="hidden" name="center_course_cd" value="{{ request.GET.center_course_cd }}">
+        <input type="hidden" name="distance_cd" value="{{ request.GET.distance_cd }}">
+        <input type="hidden" name="work_completed_flag" value="{{ request.GET.work_completed_flag }}">
+        <input type="hidden" name="race_date" value="{{ request.GET.race_date }}">
+        <input type="hidden" name="race_no" value="{{ request.GET.race_no }}">
+        <label><input type="radio" name="view_type" value="Replay_Patrol" {% if selected_view == 'Replay_Patrol' %}checked{% endif %}> Replay Patrol</label>
+        <label><input type="radio" name="view_type" value="Replay_Aerial" {% if selected_view == 'Replay_Aerial' %}checked{% endif %}> Replay Aerial</label>
+
+        <label><input type="checkbox" name="show_video" {% if media_type == 'video' %}checked{% endif %}> Show Video</label>
+        <div>
+            <button style="margin-top: 15px; border-radius: 15px" type="submit">Apply</button>
+        </div>
+
+    </form>
+
+</div>
+
+<div class="content-container">
+    <div class="responsive-flex" style="display: flex; flex-wrap: nowrap; max-width: 100%;">
+        <div class="media-section" style="flex: 0 0 1000px; margin-right: 20px; max-width: 100%;">
+            {% if media_type == 'video' %}
+                <video width="100%" controls>
+                    <source src="{{ video_url }}" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+            {% else %}
+                {% if selected_view == 'Replay_Patrol' %}
+                    <img src="{{ patrol_img_path }}" alt="Captured Patrol" style="width: 100%; height: auto;">
+                {% else %}
+                    <img src="{{ aerial_img_path }}" alt="Captured Aerial" style="width: 100%; height: auto;">
+                {% endif %}
+            {% endif %}
+            <p style="font-size: 24px; text-align: center; color: green; margin: 10px 0;">
+                Total Runners = {{ Total_Runners }} Out Data available for: {{ out_available }} Pending Outs: {{ Pending_Outs }}
+            </p>
+        </div>
+
+        <div class="pivot-table-section" >
+            <table class="pivot-table">
+                <thead>
+                    <tr>
+                        <th style="padding: 4px; background-color: #f2f2f2; white-space: nowrap;">Outs → Back ↓</th>
+                        {% for header in column_headers %}
+                        <th style="padding: 4px; text-align: left; white-space: nowrap;">{{ header }}</th>
+                        {% endfor %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in new_pivot_table %}
+                    <tr>
+                        <td style="padding: 4px; white-space: nowrap;">{{ row.out_value }}</td>
+                        {% for value in row.values %}
+                        <td style="padding: 4px; text-align: center; white-space: nowrap; max-width: 60px; overflow: hidden; text-overflow: ellipsis;">
+                            {% if value.image_url %}
+                            <img src="{{ value.image_url }}" alt="{{ value.player_name }}" title="{{ value.player_name }}" style="max-width: 50px; height: auto;">
+                            {% else %}
+                            {{ value.player_name }}
+                            {% endif %}
+                        </td>
+                        {% endfor %}
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div style="border-top: 2px solid rgb(172, 165, 165); width: 100%; margin: 20px 0;"></div>
+<div class="full-width-image">
+    <img src="{{crop_image_path}}" alt="crop image">
+</div>
+{% endblock %}

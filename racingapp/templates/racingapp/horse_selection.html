@@ -1,0 +1,71 @@
+{% extends 'racingapp/race_view.html' %}
+
+
+{% load static %} 
+ 
+<link rel="stylesheet" href="/static/racingapp/style.css">
+{% block content %}
+<div class=" form-container">
+        <form method="POST">
+            {% csrf_token %}
+            <label for="horse">Select Horse:</label>
+            <select id="horse-select" name="horse">
+                {% for horse in horse_choices %}
+                    <option value="{{ horse }}">{{ horse }}</option>
+                {% endfor %}
+            </select>
+            {% if horse_image %}
+            <div>
+                <center>
+                    <img id="horse-image" src="{{ horse_image }}" width="90" height="114" />
+                </center>
+            </div>
+            {% endif %}
+
+            <label for="outs">Outs:</label>
+            <input type="text" name="outs" id="outs-input" value="{{ initial_outs }}" placeholder="Number between 0 and 9">
+
+            <label for="snag_number">Snag Number:</label>
+            <input type="text" name="snag_number" id="snag-input" value="{{ initial_snag }}" placeholder="Number between 1 and 9">
+
+            <button type="submit">Submit</button>
+        </form>
+        {% if status_message %}
+            <p>{{ status_message }}</p>
+        {% endif %}
+</div>
+{% block pivot_content %} {% endblock %}
+
+{{ horse_data|json_script:"horseData" }}
+
+<script>
+    const horseData = JSON.parse(document.getElementById('horseData').textContent);
+    console.log(horseData);
+    console.log("Horse data keys:", Object.keys(horseData)); 
+
+    document.getElementById('horse-select').addEventListener('change', function() {
+        const selectedHorse = this.value.trim();
+        console.log("selected horse",selectedHorse);
+        console.log("selected horse data",horseData[selectedHorse]);
+
+        if (horseData[selectedHorse]) {
+
+            const outs = horseData[selectedHorse].Outs;
+            const snag = horseData[selectedHorse].Snag;
+            const imageUrl = horseData[selectedHorse].Silk;
+            console.log("selected horse outs", outs);
+            console.log("selected horse snag", snag);
+            console.log("selected horse image", imageUrl);
+
+            document.getElementById('outs-input').value = outs;
+            document.getElementById('snag-input').value = snag;
+
+            const horseImageElement = document.getElementById('horse-image');
+            horseImageElement.src = imageUrl;
+        } else {
+            console.error("Selected horse does not exist in horseData.");
+        }
+    });
+</script>
+
+{% endblock %}

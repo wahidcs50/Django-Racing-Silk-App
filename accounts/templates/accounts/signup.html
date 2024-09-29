@@ -1,0 +1,56 @@
+{% load static %}
+
+<link rel="stylesheet" href="/static/accounts/accounts.css">
+
+<div class="auth-container">
+    <h2>Signup</h2>
+    <form method="post">
+        {% csrf_token %}
+         <div>
+            {{ form.first_name.label_tag }}
+            {{ form.first_name }}
+        </div>
+        <div>
+            {{ form.last_name.label_tag }}
+            {{ form.last_name }}
+        </div>
+        <div>
+            {{form.username.label_tag }}
+            {{ form.username }}
+        </div>
+        <div class="password-field">
+            {{ form.password1.label_tag }}
+            <div class="password-input">
+                {{ form.password1 }}
+
+                <span toggle="#id_password1" class="eye-icon toggle-password"></span>
+            </div>
+            <small>{{ form.password1.help_text }}</small>
+        </div>
+        <div class="password-field">
+            {{ form.password2.label_tag }}
+            <div class="password-input">
+                {{ form.password2 }}
+                <span toggle="#id_password2" class="eye-icon toggle-password"></span>
+            </div>
+        </div>
+        
+        <button type="submit">Signup</button>
+    </form>
+    <a href="{% url 'login' %}">Already have an account? Login here.</a>
+</div>
+
+<script>
+    document.querySelectorAll('.toggle-password').forEach(icon => {
+        icon.addEventListener('click', function() {
+            const passwordField = document.querySelector(this.getAttribute('toggle'));
+            if (passwordField.type === 'password') {
+                passwordField.type = 'text';
+                this.classList.add('visible');
+            } else {
+                passwordField.type = 'password';
+                this.classList.remove('visible');
+            }
+        });
+    });
+</script>
